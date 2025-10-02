@@ -2,6 +2,13 @@
 
 
 ### 🚀 Introduction
+
+### ✨ Features
+
+### 🧪 Experiment and Results
+
+
+## others
 * 此开源项目旨在完全从0开始，仅用3块钱成本 + 2小时！即可训练出仅为25.8M的超小语言模型**MiniMind**。
 * **MiniMind**系列极其轻量，最小版本体积是 GPT-3 的 $\frac{1}{7000}$，力求做到最普通的个人GPU也可快速训练。
 * 项目同时开源了大模型的极简结构-包含拓展共享混合专家(MoE)、数据集清洗、预训练(Pretrain)、监督微调(SFT)、LoRA微调，
@@ -1307,98 +1314,8 @@ ollama run minimind2
 > 你好，我是MiniMind2，一个基于xxxxxxxx
 ```
 
-更多用法请参考官方说明～
-
-# 📌 Acknowledge
-
-> [!NOTE]
-> 如果觉得`MiniMind系列`对您有所帮助，可以在 GitHub 上加一个⭐<br/>
-> 篇幅超长水平有限难免纰漏，欢迎在Issues交流指正或提交PR改进项目<br/>
-> 您的小小支持就是持续改进此项目的动力！
-
-## 🤝[贡献者](https://github.com/jingyaogong/minimind/graphs/contributors)
-
-<!--
-<a href="https://github.com/jingyaogong/minimind/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=jingyaogong/minimind&v3" />
-</a>
--->
-
-<a href="https://github.com/jingyaogong"><img src="https://avatars.githubusercontent.com/u/62287848" width="70px" height="70px"/></a>
-&nbsp;
-<a href="https://github.com/MuWinds"><img src="https://avatars.githubusercontent.com/u/93832089" width="70px" height="70px"/></a>
-&nbsp;
-<a href="https://github.com/chuanzhubin"><img src="https://avatars.githubusercontent.com/u/2813798" width="70px" height="70px"/></a>
-&nbsp;
-<a href="https://github.com/iomgaa-ycz"><img src="https://avatars.githubusercontent.com/u/124225682" width="70px" height="70px"/></a>
-&nbsp;
-
-## 😊鸣谢
-
-<a href="https://github.com/ipfgao"><b>@ipfgao</b></a>:
-<a href="https://github.com/jingyaogong/minimind/issues/26">🔗训练步骤记录</a>
-
-<a href="https://github.com/chuanzhubin"><b>@chuanzhubin</b></a>:
-<a href="https://github.com/jingyaogong/minimind/pull/34">🔗代码逐行注释</a>
-
-<a href="https://github.com/WangRongsheng"><b>@WangRongsheng</b></a>:
-<a href="https://github.com/jingyaogong/minimind/issues/39">🔗大型数据集预处理</a>
-
-<a href="https://github.com/pengqianhan"><b>@pengqianhan</b></a>:
-<a href="https://github.com/jingyaogong/minimind/issues/73">🔗一个简明教程</a>
-
-<a href="https://github.com/RyanSunn"><b>@RyanSunn</b></a>:
-<a href="https://github.com/jingyaogong/minimind/issues/75">🔗推理过程学习记录</a>
-
-<a href="https://github.com/Nijikadesu"><b>@Nijikadesu</b></a>:
-<a href="https://github.com/jingyaogong/minimind/issues/213">🔗以交互笔记本方式分解项目代码</a>
 
 
-<details close> 
-<summary> <b>参考链接 & 感谢以下优秀的论文或项目</b> </summary>
 
-- 排名不分任何先后顺序
-- [https://github.com/meta-llama/llama3](https://github.com/meta-llama/llama3)
-- [https://github.com/karpathy/llama2.c](https://github.com/karpathy/llama2.c)
-- [https://github.com/DLLXW/baby-llama2-chinese](https://github.com/DLLXW/baby-llama2-chinese)
-- [(DeepSeek-V2)https://arxiv.org/abs/2405.04434](https://arxiv.org/abs/2405.04434)
-- [https://github.com/charent/ChatLM-mini-Chinese](https://github.com/charent/ChatLM-mini-Chinese)
-- [https://github.com/wdndev/tiny-llm-zh](https://github.com/wdndev/tiny-llm-zh)
-- [(Mistral-MoE)https://arxiv.org/pdf/2401.04088](https://arxiv.org/pdf/2401.04088)
-- [https://github.com/Tongjilibo/build_MiniLLM_from_scratch](https://github.com/Tongjilibo/build_MiniLLM_from_scratch)
-- [https://github.com/jzhang38/TinyLlama](https://github.com/jzhang38/TinyLlama)
-- [https://github.com/AI-Study-Han/Zero-Chatgpt](https://github.com/AI-Study-Han/Zero-Chatgpt)
-- [https://github.com/xusenlinzy/api-for-open-llm](https://github.com/xusenlinzy/api-for-open-llm)
-- [https://github.com/HqWu-HITCS/Awesome-Chinese-LLM](https://github.com/HqWu-HITCS/Awesome-Chinese-LLM)
-
-</details>
-
-## 🫶支持者
-
-<a href="https://github.com/jingyaogong/minimind/stargazers">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://reporoster.com/stars/dark/jingyaogong/minimind"/>
-      <source media="(prefers-color-scheme: light)" srcset="https://reporoster.com/stars/jingyaogong/minimind"/>
-      <img alt="github contribution grid snake animation" src="https://reporoster.com/stars/jingyaogong/minimind"/>
-    </picture>
-</a>
-
-<a href="https://github.com/jingyaogong/minimind/network/members">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://reporoster.com/forks/dark/jingyaogong/minimind"/>
-      <source media="(prefers-color-scheme: light)" srcset="https://reporoster.com/forks/jingyaogong/minimind"/>
-      <img alt="github contribution grid snake animation" src="https://reporoster.com/forks/jingyaogong/minimind"/>
-    </picture>
-</a>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=jingyaogong/minimind&type=Date&theme=dark"/>
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=jingyaogong/minimind&type=Date"/>
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=jingyaogong/minimind&type=Date"/>
-</picture>
-
-# License
-
-This repository is licensed under the [Apache-2.0 License](LICENSE).
 
 
