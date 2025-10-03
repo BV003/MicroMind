@@ -14,7 +14,7 @@ def init_model(args):
     if args.load == 0:
         moe_path = '_moe' if args.use_moe else ''
         modes = {0: 'pretrain', 1: 'full_sft', 2: 'rlhf', 3: 'reason', 4: 'grpo'}
-        ckp = f'./{args.out_dir}/{modes[args.model_mode]}_{args.hidden_size}{moe_path}.pth'
+        ckp = f'{args.out_dir}/{modes[args.model_mode]}_{args.hidden_size}{moe_path}.pth'
 
         model = MiniMindForCausalLM(MiniMindConfig(
             hidden_size=args.hidden_size,
@@ -26,7 +26,7 @@ def init_model(args):
 
         if args.lora_name != 'None':
             apply_lora(model)
-            load_lora(model, f'./{args.out_dir}/lora/{args.lora_name}_{args.hidden_size}.pth')
+            load_lora(model, f'{args.out_dir}/lora/{args.lora_name}_{args.hidden_size}.pth')
     else:
         transformers_model_path = './MiniMind2'
         tokenizer = AutoTokenizer.from_pretrained(transformers_model_path)
@@ -45,7 +45,7 @@ def get_prompt_datas(args):
             '世界上最高的山峰是',
             '二氧化碳在空气中',
             '地球上最大的动物有',
-            '杭州市的美食有'
+            '长沙市的美食有'
         ]
     else:
         if args.lora_name == 'None':
@@ -56,7 +56,7 @@ def get_prompt_datas(args):
                 '鲁迅的《狂人日记》是如何批判封建礼教的？',
                 '我咳嗽已经持续了两周，需要去医院检查吗？',
                 '详细的介绍光速的物理概念。',
-                '推荐一些杭州的特色美食吧。',
+                '推荐一些长沙的特色美食吧。',
                 '请为我讲解“大语言模型”这个概念。',
                 '如何理解ChatGPT？',
                 'Introduce the history of the United States, please.'
@@ -99,7 +99,7 @@ def setup_seed(seed):
 def main():
     parser = argparse.ArgumentParser(description="Chat with MiniMind")
     parser.add_argument('--lora_name', default='None', type=str)
-    parser.add_argument('--out_dir', default='out', type=str)
+    parser.add_argument('--out_dir', default='/root/autodl-tmp/datasets/gongjy/out', type=str)
     parser.add_argument('--temperature', default=0.85, type=float)
     parser.add_argument('--top_p', default=0.85, type=float)
     parser.add_argument('--device', default='cuda' if torch.cuda.is_available() else 'cpu', type=str)
