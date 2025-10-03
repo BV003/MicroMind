@@ -37,6 +37,7 @@ python train_pretrain.py
 ```
 python train_full_sft.py
 ```
+一个epoch 45min，训练了一个epoch后停止了
 
 ### 📊 Results
 
