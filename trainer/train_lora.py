@@ -90,6 +90,7 @@ def train_epoch(epoch, wandb):
             model.train()
 
 
+# 加载预训练好的模型
 def init_model(lm_config):
     tokenizer = AutoTokenizer.from_pretrained('../model/')
     model = MiniMindForCausalLM(lm_config)
@@ -114,7 +115,7 @@ def init_distributed_mode():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MiniMind SFT with LoRA")
-    parser.add_argument("--out_dir", type=str, default="../out")
+    parser.add_argument("--out_dir", type=str, default="/root/autodl-tmp/datasets/gongjy/out")
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learning_rate", type=float, default=1e-4)
@@ -134,7 +135,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_hidden_layers', default=8, type=int)
     parser.add_argument('--max_seq_len', default=512, type=int)
     parser.add_argument('--use_moe', default=False, type=bool)
-    parser.add_argument("--data_path", type=str, default="../dataset/lora_medical.jsonl")
+    parser.add_argument("--data_path", type=str, default="/root/autodl-tmp/datasets/gongjy/minimind_dataset/lora_medical.jsonl")
     parser.add_argument("--lora_name", type=str, default="lora_medical", help="根据任务保存成lora_(英文/医学/心理...)")
     args = parser.parse_args()
 

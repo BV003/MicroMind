@@ -134,7 +134,7 @@ def init_distributed_mode():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MiniMind Distill Reasoning")
-    parser.add_argument("--out_dir", type=str, default="../out")
+    parser.add_argument("--out_dir", type=str, default="/root/autodl-tmp/datasets/gongjy/out")
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--learning_rate", type=float, default=1e-6)
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_hidden_layers', default=8, type=int)
     parser.add_argument('--max_seq_len', default=1024, type=int)
     parser.add_argument('--use_moe', default=False, type=bool)
-    parser.add_argument("--data_path", type=str, default="../dataset/r1_mix_1024.jsonl")
+    parser.add_argument("--data_path", type=str, default="/root/autodl-tmp/datasets/gongjy/minimind_dataset/r1_mix_1024.jsonl")
 
     args = parser.parse_args()
 
