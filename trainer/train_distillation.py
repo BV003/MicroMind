@@ -184,7 +184,7 @@ def init_distributed_mode():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MiniMind Full SFT")
-    parser.add_argument("--out_dir", type=str, default="../out")
+    parser.add_argument("--out_dir", type=str, default="/root/autodl-tmp/datasets/gongjy/out")
     parser.add_argument("--epochs", type=int, default=6)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learning_rate", type=float, default=5e-6)
@@ -201,12 +201,12 @@ if __name__ == "__main__":
     parser.add_argument("--save_interval", type=int, default=100)
     parser.add_argument("--max_seq_len", type=int, default=512)
     parser.add_argument('--local_rank', type=int, default=-1)
-    parser.add_argument("--data_path", type=str, default="../dataset/sft_xxx.jsonl")
+    parser.add_argument("--data_path", type=str, default="/root/autodl-tmp/datasets/gongjy/minimind_dataset/sft_1024.jsonl")
 
     args = parser.parse_args()
     # 定义学生模型和教师模型
     lm_config_student = MiniMindConfig(hidden_size=512, num_hidden_layers=8)
-    lm_config_teacher = MiniMindConfig(hidden_size=768, num_hidden_layers=16)
+    lm_config_teacher = MiniMindConfig(hidden_size=512, num_hidden_layers=16)
     args.save_dir = os.path.join(args.out_dir)
     os.makedirs(args.save_dir, exist_ok=True)
     os.makedirs(args.out_dir, exist_ok=True)
