@@ -1,0 +1,46 @@
+{
+  "os":  "Linux-6.2.0-26-generic-x86_64-with-glibc2.35",
+  "python":  "3.10.16",
+  "startedAt":  "2025-10-10T01:35:16.953076Z",
+  "args":  [
+    "--use_wandb"
+  ],
+  "program":  "/root/home/MicroMind/trainer/train_pretrain.py",
+  "codePath":  "trainer/train_pretrain.py",
+  "git":  {
+    "remote":  "https://github.com/BV003/MicroMind.git",
+    "commit":  "45121d09668be5ed36229914eea59185cbb2f0b7"
+  },
+  "email":  "bbz975749@gmail.com",
+  "root":  "/root/home/MicroMind/trainer",
+  "host":  "autodl-container-f4b94a8e05-231aa0c2",
+  "username":  "root",
+  "executable":  "/root/miniconda3/envs/micromind/bin/python",
+  "codePathLocal":  "train_pretrain.py",
+  "cpu_count":  64,
+  "cpu_count_logical":  128,
+  "gpu":  "[NVIDIA GeForce RTX 4090]",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "32212254720",
+      "used":  "8522924032"
+    }
+  },
+  "memory":  {
+    "total":  "811224084480"
+  },
+  "cpu":  {
+    "count":  64,
+    "countLogical":  128
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 4090",
+      "memoryTotal":  "25757220864",
+      "cudaCores":  16384,
+      "architecture":  "Ada"
+    }
+  ],
+  "cudaVersion":  "13.0"
+}
