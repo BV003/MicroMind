@@ -216,6 +216,8 @@ python eval_model.py --model_mode 1
 
 ### 使用wandb查看曲线
 
+<img src="./images/wandb.png" alt="wandb" style="vertical-align: middle; width: auto; max-width: 100%;" />
+
 ### 简单问题回答效果
 
 ### 大模型测评各个模型的变体回答怎么样，进行打分
