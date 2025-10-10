@@ -5,33 +5,19 @@
 
 ### ✨ Features
 
-### quick start
+### ⚡ quick start（项目的配置与启动）
+
+
 #### 下载数据集
 采用原项目提供的数据集
 ```
 modelscope download --dataset gongjy/minimind_dataset
 ```
 
-## 🧪 Experiment and 📊 Results
-
-### 测试配置
-
-
-
-#### 测试模型效果
-确保需要测试的模型*.pth文件位于./out/目录下
-```
-python eval_model.py --model_mode 1 
-# 0：测试pretrain
-# 1：测试full_sft
-# 2：测试rlhf
-# 3：测试reason
-# 4：测试grpo
-```
+## 🧪 Experiment
 
 ### Pretrain
-
-### 运行
+#### 运行
 
 采用默认配置运行预训练
 ```
@@ -42,7 +28,7 @@ python train_pretrain.py
 在batch_size为32的情况下，训练用时50min
 在batch_size为64的情况下，训练用时会减慢到
 
-### 问题
+#### 问题
 ```
 '马克思主义基本原理',
 '人类大脑的主要功能',
@@ -120,7 +106,7 @@ python train_pretrain.py
 python train_full_sft.py
 ```
 一个epoch 45min，训练了一个epoch后停止了
-### 问题
+#### 问题
 ```
 '请介绍一下自己。',
 '你更擅长哪一个学科？',
@@ -179,3 +165,70 @@ python train_full_sft.py
 🤖️: "Intrceok" 是一个由"Space" 或 "Hasf" 构成的文本，其中包含了"Introce" 和"Hasf"，但它们在语义上是不同的，因为它们都属于某种文学体裁，具有文学性和情感色彩。
 ```
 
+
+### Reinforcement Learning from Human Feedback, RLHF
+
+我们希望它能够更符合人的偏好，降低让人类不满意答案的产生概率。 
+此处使用的是RLHF系列之-直接偏好优化(Direct Preference Optimization, DPO)。DPO通过推导PPO奖励模型的显式解，把在线奖励模型换成离线数据，Ref模型输出可以提前保存。DPO性能几乎不变，只用跑 actor_model 和 ref_model 两个模型，大大节省显存开销和增加训练稳定性。
+
+```
+python train_dpo.py
+```
+### 知识蒸馏，KD
+学生模型是一个较小的模型，目标是学习教师模型的行为，而不是直接从原始数据中学习。小模型仅学习软标签，并使用KL-Loss来优化模型的参数。目的是让小模型体积更小的同时效果更好。GPT-4这种闭源模型，由于无法获取其内部结构，因此只能面向它所输出的数据学习，这个过程称之为黑盒蒸馏，也是大模型时代最普遍的做法。 黑盒蒸馏与SFT过程完全一致，只不过数据是从大模型的输出收集，因此只需要准备数据并且进一步FT即可。
+注意更改被加载的基础模型为full_sft_*.pth，即基于微调模型做进一步的蒸馏学习。 ./dataset/sft_1024.jsonl与./dataset/sft_2048.jsonl 均收集自qwen2.5-7/72B-Instruct大模型，可直接用于SFT以获取Qwen的部分行为。
+```
+# 进行黑盒蒸馏
+python train_full_sft.py
+
+# 进行白盒蒸馏
+python train_distillation.py
+```
+这里白盒蒸馏的代码并没有怎么写好，原本说的是仅仅作为教学使用，这里可以自己更新更新
+
+### LoRA (Low-Rank Adaptation)
+相比于全参数微调（Full Fine-Tuning），LoRA 只需要更新少量的参数。 LoRA 的核心思想是：在模型的权重矩阵中引入低秩分解，仅对低秩部分进行更新，而保持原始预训练权重不变。
+
+```
+python train_lora.py
+```
+
+如何使模型学会自己私有领域的知识？如何准备数据集？如何迁移通用领域模型打造垂域模型？ 这里举几个例子，对于通用模型，医学领域知识欠缺，可以尝试在原有模型基础上加入领域知识，以获得更好的性能。 同时，我们通常不希望学会领域知识的同时损失原有基础模型的其它能力，此时LoRA可以很好的改善这个问题。 
+
+我们可以通过eval_model.py进行模型评估测试。
+```
+# 注意：model_mode即选择基础模型的类型，这和train_lora是基于哪个模型训练的相关，确保统一即可。
+python eval_model.py --lora_name 'lora_medical' --model_mode 1
+```
+
+
+### 训练推理模型 (Reasoning Model)
+GRPO
+另一个问题是蒸馏过程虽然和SFT一样，但实验结果是模型难以每次都符合模板规范的回复，即脱离思考和回复标签约束。 这里的小技巧是增加标记位置token的损失惩罚，详见train_distill_reason.py:
+
+```
+python train_distill_reason.py
+```
+
+
+## 📌 Eval
+### eval_model.py
+
+#### 测试模型效果
+确保需要测试的模型*.pth文件位于./out/目录下
+```
+python eval_model.py --model_mode 1 
+# 0：测试pretrain
+# 1：测试full_sft
+# 2：测试rlhf
+# 3：测试reason
+# 4：测试grpo
+```
+
+### 使用wandb查看曲线
+
+### 简单问题回答效果
+
+### 大模型测评各个模型的变体回答怎么样，进行打分
+
+### benchmark进行简单的模型训练
