@@ -174,17 +174,6 @@ python train_full_sft.py
 ```
 python train_dpo.py
 ```
-### 知识蒸馏，KD
-学生模型是一个较小的模型，目标是学习教师模型的行为，而不是直接从原始数据中学习。小模型仅学习软标签，并使用KL-Loss来优化模型的参数。目的是让小模型体积更小的同时效果更好。GPT-4这种闭源模型，由于无法获取其内部结构，因此只能面向它所输出的数据学习，这个过程称之为黑盒蒸馏，也是大模型时代最普遍的做法。 黑盒蒸馏与SFT过程完全一致，只不过数据是从大模型的输出收集，因此只需要准备数据并且进一步FT即可。
-注意更改被加载的基础模型为full_sft_*.pth，即基于微调模型做进一步的蒸馏学习。 ./dataset/sft_1024.jsonl与./dataset/sft_2048.jsonl 均收集自qwen2.5-7/72B-Instruct大模型，可直接用于SFT以获取Qwen的部分行为。
-```
-# 进行黑盒蒸馏
-python train_full_sft.py
-
-# 进行白盒蒸馏
-python train_distillation.py
-```
-这里白盒蒸馏的代码并没有怎么写好，原本说的是仅仅作为教学使用，这里可以自己更新更新
 
 ### LoRA (Low-Rank Adaptation)
 相比于全参数微调（Full Fine-Tuning），LoRA 只需要更新少量的参数。 LoRA 的核心思想是：在模型的权重矩阵中引入低秩分解，仅对低秩部分进行更新，而保持原始预训练权重不变。
