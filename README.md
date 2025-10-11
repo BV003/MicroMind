@@ -5,13 +5,19 @@
 
 ### 🚀 Introduction
 
-### ✨ Features
-
-### ⚡ quick start（项目的配置与启动）
+MicroMind is a lightweight small language model framework, designed for experimentation, research, and learning. Inspired by the MiniMind project by Jingyao Gong, MicroMind introduces enhancements and optimizations to improve training efficiency and model performance while keeping the codebase simple and easy to understand.
 
 
-#### 下载数据集
-采用原项目提供的数据集
+### ⚡ quick start
+下载代码仓库
+```
+git clone https://github.com/BV003/MicroMind
+```
+环境准备
+```
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+下载数据集，采用原项目提供的数据集
 ```
 modelscope download --dataset gongjy/minimind_dataset
 ```
