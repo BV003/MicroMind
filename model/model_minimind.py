@@ -404,7 +404,7 @@ class MiniMindModel(nn.Module):
 
         return hidden_states, presents, aux_loss
 
-
+# 这段代码实现了 MiniMind 用于自回归语言建模（Causal LM）的封装，即把基础的 MiniMindModel 包装成可以直接用于生成任务（如文本生成、语言建模）的接口。
 class MiniMindForCausalLM(PreTrainedModel, GenerationMixin):
     config_class = MiniMindConfig
 
