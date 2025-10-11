@@ -70,6 +70,7 @@ modelscope download --dataset gongjy/minimind_dataset
 ### model/tokenizer
 - 主要作用是定义模型如何将原始文本转换为可被模型理解的数字序列（tokens）
 - 确保训练和推理阶段使用相同的分词逻辑，避免因文本转换方式不同导致的模型性能下降。例如，对多语言文本（如包含中英文字符的片段）进行一致的分割和编码。
+- 使用token而不是字符的好处有，统一不同语言，降低序列长度，捕捉语义信息
 
 ## 🧪 Experiment
 
