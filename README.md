@@ -1,5 +1,7 @@
 # MicroMind
 
+> This project, MicroMind, is primarily based on and inspired by the MiniMind project by Jingyao Gong (https://github.com/jingyaogong/minimind), with modifications and enhancements specific to this repository.
+
 
 ### 🚀 Introduction
 
@@ -13,6 +15,8 @@
 ```
 modelscope download --dataset gongjy/minimind_dataset
 ```
+
+## 理论，代码结构
 
 ## 🧪 Experiment
 
