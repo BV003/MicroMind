@@ -209,7 +209,7 @@ python train_distill_reason.py
 # 1：测试full_sft
 # 2：测试rlhf
 # 3：测试reason
-# 4：测试lora+sft
+# 4：测试lora(医学数据微调)+sft
 ```
 
 ### 问题
