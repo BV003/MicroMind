@@ -1,10 +1,6 @@
-# 📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘
-#                                             MiniMind Config
-# 📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘
-
 from transformers import PretrainedConfig
 
-
+# 定义了一个 模型配置类 (MiniMindConfig)，用于 存储和管理 MiniMind 模型的各种超参数和配置。
 class MiniMindConfig(PretrainedConfig):
     model_type = "minimind"
 
@@ -39,7 +35,7 @@ class MiniMindConfig(PretrainedConfig):
             **kwargs
     ):
         super().__init__(**kwargs)
-        self.dropout = dropout
+        self.dropout = dropout              # 基本模型参数
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
         self.hidden_act = hidden_act
@@ -57,7 +53,7 @@ class MiniMindConfig(PretrainedConfig):
         # Here are the specific configurations of MOE
         # When use_moe is false, the following is invalid
         ####################################################
-        self.use_moe = use_moe
+        self.use_moe = use_moe          # Mixture of Experts (MoE) 特有配置
         self.num_experts_per_tok = num_experts_per_tok  # 每个token选择的专家数量
         self.n_routed_experts = n_routed_experts  # 总的专家数量
         self.n_shared_experts = n_shared_experts  # 共享专家
@@ -67,9 +63,6 @@ class MiniMindConfig(PretrainedConfig):
         self.norm_topk_prob = norm_topk_prob  # 是否标准化top-k概率
 
 
-# 📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘
-#                                             MiniMind Model
-# 📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘📘
 
 import math
 import torch
@@ -80,7 +73,7 @@ import torch.nn.functional as F
 from transformers import PreTrainedModel, GenerationMixin, PretrainedConfig
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
-
+# 这段代码实现了 RMSNorm（Root Mean Square Layer Normalization），这是一种 Layer Normalization 的变种。
 class RMSNorm(torch.nn.Module):
     def __init__(self, dim: int, eps: float = 1e-5):
         super().__init__()
@@ -93,7 +86,7 @@ class RMSNorm(torch.nn.Module):
     def forward(self, x):
         return self.weight * self._norm(x.float()).type_as(x)
 
-
+# 这是 Rotary Positional Embedding（RoPE） 的预计算函数，用于生成正余弦频率向量。
 def precompute_freqs_cis(dim: int, end: int = int(32 * 1024), theta: float = 1e6):
     freqs = 1.0 / (theta ** (torch.arange(0, dim, 2)[: (dim // 2)].float() / dim))
     t = torch.arange(end, device=freqs.device)
@@ -102,7 +95,7 @@ def precompute_freqs_cis(dim: int, end: int = int(32 * 1024), theta: float = 1e6
     freqs_sin = torch.cat([torch.sin(freqs), torch.sin(freqs)], dim=-1)
     return freqs_cos, freqs_sin
 
-
+# 将 RoPE（Rotary Positional Embedding） 应用于注意力的 q 和 k 矩阵。
 def apply_rotary_pos_emb(q, k, cos, sin, position_ids=None, unsqueeze_dim=1):
     def rotate_half(x):
         return torch.cat((-x[..., x.shape[-1] // 2:], x[..., : x.shape[-1] // 2]), dim=-1)
@@ -111,7 +104,7 @@ def apply_rotary_pos_emb(q, k, cos, sin, position_ids=None, unsqueeze_dim=1):
     k_embed = (k * cos.unsqueeze(unsqueeze_dim)) + (rotate_half(k) * sin.unsqueeze(unsqueeze_dim))
     return q_embed, k_embed
 
-
+# 用于 MoE（Mixture of Experts）模型中扩展 Key/Value 头。
 def repeat_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
     """torch.repeat_interleave(x, dim=2, repeats=n_rep)"""
     bs, slen, num_key_value_heads, head_dim = x.shape
@@ -123,7 +116,7 @@ def repeat_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
         .reshape(bs, slen, num_key_value_heads * n_rep, head_dim)
     )
 
-
+# 实现了 多头注意力（Multi-Head Attention, MHA）
 class Attention(nn.Module):
     def __init__(self, args: MiniMindConfig):
         super().__init__()
@@ -163,7 +156,7 @@ class Attention(nn.Module):
             xk = torch.cat([past_key_value[0], xk], dim=1)
             xv = torch.cat([past_key_value[1], xv], dim=1)
         past_kv = (xk, xv) if use_cache else None
-
+        # MoE 头扩展
         xq, xk, xv = (
             xq.transpose(1, 2),
             repeat_kv(xk, self.n_rep).transpose(1, 2),
@@ -198,7 +191,7 @@ class Attention(nn.Module):
         output = self.resid_dropout(self.o_proj(output))
         return output, past_kv
 
-
+# 实现了 Transformer 中的前馈网络（FeedForward, FFN）
 class FeedForward(nn.Module):
     def __init__(self, config: MiniMindConfig):
         super().__init__()
@@ -214,7 +207,7 @@ class FeedForward(nn.Module):
     def forward(self, x):
         return self.dropout(self.down_proj(self.act_fn(self.gate_proj(x)) * self.up_proj(x)))
 
-
+# 实现了 Mixture-of-Experts (MoE) 模型中的门控（Gating）模块，是 MiniMind 中可选的 MoE 层核心逻辑。
 class MoEGate(nn.Module):
     def __init__(self, config: MiniMindConfig):
         super().__init__()
@@ -271,7 +264,7 @@ class MoEGate(nn.Module):
             aux_loss = 0
         return topk_idx, topk_weight, aux_loss
 
-
+# 实现了 Mixture-of-Experts (MoE) 版本的前馈网络层（FeedForward Layer），即 MOEFeedForward
 class MOEFeedForward(nn.Module):
     def __init__(self, config: MiniMindConfig):
         super().__init__()
@@ -333,7 +326,7 @@ class MOEFeedForward(nn.Module):
 
         return expert_cache
 
-
+# 实现了 MiniMind 模型中的 Transformer Block，也就是模型的基本构建单元，每一层包含自注意力和前馈层（可选 MoE），类似于标准 Transformer，但做了一些轻量化和优化。
 class MiniMindBlock(nn.Module):
     def __init__(self, layer_id: int, config: MiniMindConfig):
         super().__init__()
@@ -357,7 +350,7 @@ class MiniMindBlock(nn.Module):
         hidden_states = hidden_states + self.mlp(self.post_attention_layernorm(hidden_states))
         return hidden_states, present_key_value
 
-
+# 实现了 MiniMind 模型的完整 Transformer 模型，即将多个 MiniMindBlock 堆叠起来，并加上输入嵌入、位置编码、最终归一化以及可选的 MoE 辅助损失计算。
 class MiniMindModel(nn.Module):
     def __init__(self, config: MiniMindConfig):
         super().__init__()

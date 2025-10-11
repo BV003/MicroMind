@@ -51,8 +51,16 @@ modelscope download --dataset gongjy/minimind_dataset
     └── train_pretrain.py       # 预训练脚本，基于预训练数据集（如pretrain_hq.jsonl）对模型进行预训练
 ```
 
+### model/model_minimind
 
-
+- 定义了一个 模型配置类 (MiniMindConfig)，用于 存储和管理 MiniMind 模型的各种超参数和配置。在 Hugging Face Transformers 框架中，PretrainedConfig 类是一个标准基类，用于保存模型的结构参数（比如层数、隐藏维度、词表大小等），方便后续实例化模型或者加载预训练权重。
+- 实现了 RMSNorm（Root Mean Square Layer Normalization），这是一种 Layer Normalization 的变种。
+- 实现 MiniMind Transformer 的核心注意力机制，可处理长序列、多头、多专家场景。
+- 实现了 Transformer 中的前馈网络（FeedForward, FFN）
+- 实现了 Mixture-of-Experts (MoE) 模型中的门控（Gating）模块，是 MiniMind 中可选的 MoE 层核心逻辑
+- 实现了 MiniMind 模型中的 Transformer Block，也就是模型的基本构建单元，每一层包含自注意力和前馈层（可选 MoE），类似于标准 Transformer，但做了一些轻量化和优化
+- 实现了 MiniMind 模型的完整 Transformer 模型，即将多个 MiniMindBlock 堆叠起来，并加上输入嵌入、位置编码、最终归一化以及可选的 MoE 辅助损失计算
+- 实现了 MiniMind 用于自回归语言建模（Causal LM）的封装，即把基础的 MiniMindModel 包装成可以直接用于生成任务（如文本生成、语言建模）的接口。
 ## 🧪 Experiment
 
 ### Pretrain
