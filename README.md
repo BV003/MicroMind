@@ -61,7 +61,15 @@ modelscope download --dataset gongjy/minimind_dataset
 - 实现了 MiniMind 模型的完整 Transformer 模型，即将多个 MiniMindBlock 堆叠起来，并加上输入嵌入、位置编码、最终归一化以及可选的 MoE 辅助损失计算
 - 实现了 MiniMind 用于自回归语言建模（Causal LM）的封装，即把基础的 MiniMindModel 包装成可以直接用于生成任务（如文本生成、语言建模）的接口。
 
-### 
+### model/model_lora
+- LoRA：定义低秩模块
+- apply_lora：在模型中插入 LoRA
+- load_lora：加载 LoRA 权重
+- save_lora：保存 LoRA 权重
+
+### model/tokenizer
+- 主要作用是定义模型如何将原始文本转换为可被模型理解的数字序列（tokens）
+- 确保训练和推理阶段使用相同的分词逻辑，避免因文本转换方式不同导致的模型性能下降。例如，对多语言文本（如包含中英文字符的片段）进行一致的分割和编码。
 
 ## 🧪 Experiment
 

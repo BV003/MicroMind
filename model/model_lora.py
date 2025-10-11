@@ -17,7 +17,7 @@ class LoRA(nn.Module):
     def forward(self, x):
         return self.B(self.A(x))
 
-
+# 遍历模型的所有 nn.Linear 层，并在权重矩阵为方阵的层（通常是 self-attention 或全连接层）上应用 LoRA
 def apply_lora(model, rank=8):
     for name, module in model.named_modules():
         if isinstance(module, nn.Linear) and module.weight.shape[0] == module.weight.shape[1]:
@@ -31,7 +31,7 @@ def apply_lora(model, rank=8):
 
             module.forward = forward_with_lora
 
-
+# 从文件加载 LoRA 权重并更新模型中的 LoRA 模块
 def load_lora(model, path):
     state_dict = torch.load(path, map_location=model.device)
     for name, module in model.named_modules():
@@ -39,7 +39,7 @@ def load_lora(model, path):
             lora_state = {k.replace(f'{name}.lora.', ''): v for k, v in state_dict.items() if f'{name}.lora.' in k}
             module.lora.load_state_dict(lora_state)
 
-
+# 仅保存 LoRA 子模块的权重，而不保存整个原始模型
 def save_lora(model, path):
     state_dict = {}
     for name, module in model.named_modules():
