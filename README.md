@@ -1,14 +1,12 @@
 # MicroMind
 
+## 🚀 Introduction
+
 > This project, MicroMind, is primarily based on and inspired by the MiniMind project by Jingyao Gong (https://github.com/jingyaogong/minimind), with modifications and enhancements specific to this repository.
-
-
-### 🚀 Introduction
 
 MicroMind is a lightweight small language model framework, designed for experimentation, research, and learning. Inspired by the MiniMind project by Jingyao Gong, MicroMind introduces enhancements and optimizations to improve training efficiency and model performance while keeping the codebase simple and easy to understand.
 
-
-### ⚡ quick start
+### quick start
 下载代码仓库
 ```
 git clone https://github.com/BV003/MicroMind
@@ -52,6 +50,8 @@ modelscope download --dataset gongjy/minimind_dataset
     ├── train_lora.py           # LoRA 微调脚本，通过低秩适配技术高效微调模型（适用于特定领域如医疗、自我认知，使用lora_medical.jsonl等数据集）
     └── train_pretrain.py       # 预训练脚本，基于预训练数据集（如pretrain_hq.jsonl）对模型进行预训练
 ```
+
+
 
 ## 🧪 Experiment
 
