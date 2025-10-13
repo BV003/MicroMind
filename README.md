@@ -87,7 +87,6 @@ modelscope download --dataset gongjy/minimind_dataset
 - 和pretrain相比较，使用 SFTDataset，在数据加载部分构造好指令
 - 仅对助理回答部分计算损失（通过 loss_mask 控制）
 
-
 ### trainer/train_dpo
 - logits 是模型最后一层（通常是线性层）的原始输出分数
 - 实现dpo_loss,分别计算动态模型和参考模型关于正样本和负样本的概率差值，让这个差值作为loss，并且尽可能的大
