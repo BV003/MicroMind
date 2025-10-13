@@ -72,6 +72,25 @@ modelscope download --dataset gongjy/minimind_dataset
 - 确保训练和推理阶段使用相同的分词逻辑，避免因文本转换方式不同导致的模型性能下降。例如，对多语言文本（如包含中英文字符的片段）进行一致的分割和编码。
 - 使用token而不是字符的好处有，统一不同语言，降低序列长度，捕捉语义信息
 
+
+
+### dataset/lm_dataset
+- 定义了 4 个 Dataset 类，每个类对应 LLM 训练的不同阶段
+- 把原始文本文件转换成模型训练所需的 token 张量
+- 并且构建好输入（X）、目标输出（Y）、以及 loss 掩码（loss_mask）
+
+### trainer/train_pretrain
+- 实现了一个 带下限的余弦退火学习率调度器,以提高模型的收敛稳定性
+- 执行一次训练轮（epoch）的所有训练步骤，包括：从 train_loader 读取 batch，前向计算模型输出（计算模型输出），计算损失，反向传播（backward计算梯度）与梯度累积，参数更新 (Step)，学习率动态调整，训练日志记录（logger & wandb），定期保存模型检查点
+
+### trainer/train_full_sft
+
+### trainer/train_dpo
+
+### trainer/train_distill_reason
+
+### trainer/train_lora
+
 ## 🧪 Experiment
 
 ### Pretrain

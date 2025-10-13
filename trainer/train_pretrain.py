@@ -24,11 +24,18 @@ def Logger(content):
     if not ddp or dist.get_rank() == 0:
         print(content)
 
-
+# 根据当前训练步数 current_step 动态调整学习率，属于一种学习率调度策略
 def get_lr(current_step, total_steps, lr):
     return lr / 10 + 0.5 * lr * (1 + math.cos(math.pi * current_step / total_steps))
 
-
+# 执行一次训练轮（epoch）的所有训练步骤，包括：
+# 从 train_loader 读取 batch；
+# 前向计算模型输出；
+# 计算损失；
+# 反向传播与梯度累积；
+# 学习率动态调整；
+# 训练日志记录（logger & wandb）；
+# 定期保存模型检查点。
 def train_epoch(epoch, wandb):
     loss_fct = nn.CrossEntropyLoss(reduction='none')
     start_time = time.time()
@@ -41,6 +48,7 @@ def train_epoch(epoch, wandb):
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
 
+        # 前向传播与损失计算
         with ctx:
             res = model(X)
             loss = loss_fct(
@@ -50,7 +58,7 @@ def train_epoch(epoch, wandb):
             loss = (loss * loss_mask).sum() / loss_mask.sum()
             loss += res.aux_loss
             loss = loss / args.accumulation_steps
-
+        # 反向传播与梯度累积
         scaler.scale(loss).backward()
 
         if (step + 1) % args.accumulation_steps == 0:
@@ -100,7 +108,8 @@ def init_model(lm_config):
     Logger(f'LLM可训练总参数量：{sum(p.numel() for p in model.parameters() if p.requires_grad) / 1e6:.3f} 百万')
     return model, tokenizer
 
-
+# 分布式训练初始化函数
+# 专门为 多 GPU / 多机器并行训练（即 DDP，Distributed Data Parallel）做准备
 def init_distributed_mode():
     if not ddp: return
     global ddp_local_rank, DEVICE
@@ -148,7 +157,8 @@ if __name__ == "__main__":
     device_type = "cuda" if "cuda" in args.device else "cpu"
 
     args.wandb_run_name = f"MiniMind-Pretrain-Epoch-{args.epochs}-BatchSize-{args.batch_size}-LearningRate-{args.learning_rate}"
-
+    
+    # 上下文管理器（context manager），它控制模型在前向传播（forward）时的执行模式
     ctx = nullcontext() if device_type == "cpu" else torch.cuda.amp.autocast()
 
     ddp = int(os.environ.get("RANK", -1)) != -1  # is this a ddp run?
@@ -186,6 +196,7 @@ if __name__ == "__main__":
         sampler=train_sampler
     )
 
+    # 创建一个梯度缩放器（GradScaler）对象，用于防止混合精度训练时的数值下溢（underflow），确保训练稳定
     scaler = torch.cuda.amp.GradScaler(enabled=(args.dtype in ['float16', 'bfloat16']))
     optimizer = optim.AdamW(model.parameters(), lr=args.learning_rate)
 
