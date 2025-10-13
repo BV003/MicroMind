@@ -29,7 +29,7 @@ def Logger(content):
 def get_lr(current_step, total_steps, lr):
     return lr / 10 + 0.5 * lr * (1 + math.cos(math.pi * current_step / total_steps))
 
-
+# 从模型输出 logits 提取对应标签概率，模型在预测下一个词时，对真正答案的信心有多大（取对数）
 def logits_to_probs(logits, labels):
     # logits shape: (batch_size, seq_len, vocab_size)
     # labels shape: (batch_size, seq_len)
@@ -41,18 +41,18 @@ def logits_to_probs(logits, labels):
 
 def dpo_loss(ref_probs, probs, mask, beta):
     # ref_probs 和 probs 都是 shape: (batch_size, seq_len)
-    # https://github.com/jingyaogong/minimind/issues/298
     seq_lengths = mask.sum(dim=1, keepdim=True)  # (batch_size, 1)
     ref_probs = (ref_probs * mask).sum(dim=1) / seq_lengths.squeeze()
     probs = (probs * mask).sum(dim=1) / seq_lengths.squeeze()
 
-    # 将 chosen 和 rejected 数据分开
+    # 将 chosen 和 rejected 数据分开，也可以理解为正样本和负样本
     batch_size = ref_probs.shape[0]
     chosen_ref_probs = ref_probs[:batch_size // 2]
     reject_ref_probs = ref_probs[batch_size // 2:]
     chosen_probs = probs[:batch_size // 2]
     reject_probs = probs[batch_size // 2:]
 
+    # 让正样本的概率更大，负样本的概率更小
     pi_logratios = chosen_probs - reject_probs
     ref_logratios = chosen_ref_probs - reject_ref_probs
     logits = pi_logratios - ref_logratios

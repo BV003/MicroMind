@@ -84,12 +84,21 @@ modelscope download --dataset gongjy/minimind_dataset
 - 执行一次训练轮（epoch）的所有训练步骤，包括：从 train_loader 读取 batch，前向计算模型输出（计算模型输出），计算损失，反向传播（backward计算梯度）与梯度累积，参数更新 (Step)，学习率动态调整，训练日志记录（logger & wandb），定期保存模型检查点
 
 ### trainer/train_full_sft
+- 和pretrain相比较，使用 SFTDataset，在数据加载部分构造好指令
+- 仅对助理回答部分计算损失（通过 loss_mask 控制）
+
 
 ### trainer/train_dpo
+- logits 是模型最后一层（通常是线性层）的原始输出分数
+- 实现dpo_loss,分别计算动态模型和参考模型关于正样本和负样本的概率差值，让这个差值作为loss，并且尽可能的大
 
 ### trainer/train_distill_reason
+- 引入思考标签，特殊标签机制：<think> / <answer>，对那些特殊标记（<think>, <answer>等）赋予更高权重（惩罚系数=10）
+- 基于RLHF模型进行的训练
 
 ### trainer/train_lora
+- 只优化 LoRA 参数，冻结除了LoRA之外的其他所有参数
+
 
 ## 🧪 Experiment
 
